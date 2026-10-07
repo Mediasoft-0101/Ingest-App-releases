@@ -1,6 +1,6 @@
 # MediaSoft Ingest App: bộ cài
 
-Repo này chỉ dùng để phát bộ cài, không chứa mã nguồn. Bản mới nhất nằm ở [Releases](../../releases/latest).
+Repo này chỉ dùng để phát bộ cài, không chứa mã nguồn. Tải bản mới nhất ở https://mediasoft-0101.github.io/Ingest-App-releases/
 
 | Hệ điều hành | Tệp | Cách cài |
 |---|---|---|
