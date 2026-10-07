@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tải MediaSoft Ingest App</title>
+<style>
+  :root { --brand: #A42C48; --bg: #F5F2F3; --card: #fff; --text: #1f1f1f; --muted: #6b6b6b; --rule: #EBE3E5; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1C1C1E; --card: #2C2C2E; --text: #f2f2f2; --muted: #a0a0a0; --rule: #3A3A3C; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 40px 16px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  .muted { color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; margin-top: 12px; display: flex; align-items: center; gap: 12px; }
+  .card.mine { border-color: var(--brand); }
+  .card div { flex: 1; min-width: 0; }
+  .card b { display: block; }
+  a.btn { background: var(--brand); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 6px; white-space: nowrap; }
+  h2 { font-size: 16px; margin: 32px 0 8px; }
+  code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; display: block; overflow-x: auto; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>MediaSoft Ingest App</h1>
+  <p class="muted" id="ver">Đang tải thông tin phiên bản…</p>
+  <div id="list"></div>
+
+  <h2>Trước khi cài</h2>
+  <p>Máy nào cũng cần cài <a href="https://www.videolan.org/vlc/">VLC</a> trước thì app mới phát được video.</p>
+
+  <h2>Windows</h2>
+  <p>Nếu Windows hiện "Windows protected your PC", bấm <b>More info</b> rồi chọn <b>Run anyway</b>. Bản mới tự thay thế bản đang cài.</p>
+
+  <h2>macOS</h2>
+  <p>Kéo app vào Applications. Lần mở đầu tiên macOS sẽ báo "ứng dụng bị hỏng". Tệp không hỏng, chỉ cần mở Terminal và chạy lệnh sau một lần:</p>
+  <code>xattr -dr com.apple.quarantine /Applications/MediaSoftMediaApp.app</code>
+
+  <h2>Linux</h2>
+  <code>sudo dpkg -i mediasoft-ingest_*.deb</code>
+</main>
+<script>
+  // Lấy bản mới nhất từ GitHub, chỉ hiện bộ cài (không hiện Source code GitHub tự gắn).
+  var OS = [
+    { ext: '.msi', name: 'Windows 10/11', ua: /Windows/ },
+    { ext: '.dmg', name: 'macOS 13 trở lên', ua: /Mac/ },
+    { ext: '.deb', name: 'Ubuntu 22.04 / Debian 12', ua: /Linux/ }
+  ];
+  var ver = document.getElementById('ver'), list = document.getElementById('list');
+  fetch('https://api.github.com/repos/Mediasoft-0101/Ingest-App-releases/releases/latest')
+    .then(function (r) { if (!r.ok) throw r; return r.json(); })
+    .then(function (rel) {
+      ver.textContent = 'Phiên bản ' + rel.tag_name.replace(/^v/, '') + ', phát hành ngày ' + new Date(rel.published_at).toLocaleDateString('vi-VN');
+      OS.forEach(function (os) {
+        var a = rel.assets.filter(function (x) { return x.name.endsWith(os.ext); })[0];
+        if (!a) return;
+        var card = document.createElement('div'), info = document.createElement('div'), t = document.createElement('b'), s = document.createElement('span'), btn = document.createElement('a');
+        card.className = 'card' + (os.ua.test(navigator.userAgent) && !/Android|iPhone|iPad/.test(navigator.userAgent) ? ' mine' : '');
+        t.textContent = os.name;
+        s.className = 'muted'; s.textContent = a.name + ' · ' + Math.round(a.size / 1048576) + ' MB';
+        btn.className = 'btn'; btn.href = a.browser_download_url; btn.textContent = 'Tải về';
+        info.append(t, s); card.append(info, btn); list.append(card);
+      });
+    })
+    .catch(function () { ver.textContent = 'Chưa lấy được danh sách bộ cài. Tải lại trang sau ít phút.'; });
+</script>
+</body>
+</html>
