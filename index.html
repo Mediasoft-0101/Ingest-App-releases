@@ -44,16 +44,25 @@
 </main>
 <script>
   // Lấy bản mới nhất từ GitHub, chỉ hiện bộ cài (không hiện Source code GitHub tự gắn).
+  // Mỗi bộ cài nhúng địa chỉ của MỘT đài. Không có #: bản mặc định (latest). Có #<đài> (vd #khanhhoa): bản mới nhất có tag <đài>-v…;
+  // bản của đài không bao giờ được đánh latest nên không lọt vào trang mặc định.
+  var DAI = { khanhhoa: 'Khánh Hòa' };
+  var dai = location.hash.replace('#', '').toLowerCase();
+  if (!DAI[dai]) dai = '';
   var OS = [
     { ext: '.msi', name: 'Windows 10/11', ua: /Windows/ },
     { ext: '.dmg', name: 'macOS 13 trở lên', ua: /Mac/ },
     { ext: '.deb', name: 'Ubuntu 22.04 / Debian 12', ua: /Linux/ }
   ];
   var ver = document.getElementById('ver'), list = document.getElementById('list');
-  fetch('https://api.github.com/repos/Mediasoft-0101/Ingest-App-releases/releases/latest')
+  var API = 'https://api.github.com/repos/Mediasoft-0101/Ingest-App-releases/releases';
+  fetch(dai ? API + '?per_page=50' : API + '/latest')
     .then(function (r) { if (!r.ok) throw r; return r.json(); })
-    .then(function (rel) {
-      ver.textContent = 'Phiên bản ' + rel.tag_name.replace(/^v/, '') + ', phát hành ngày ' + new Date(rel.published_at).toLocaleDateString('vi-VN');
+    .then(function (data) {
+      var rel = dai ? data.filter(function (x) { return x.tag_name.indexOf(dai + '-') === 0; })[0] : data;
+      if (!rel) throw new Error('chưa có bản cho đài');
+      if (dai) document.querySelector('h1').textContent = 'MediaSoft Ingest App · ' + DAI[dai];
+      ver.textContent = 'Phiên bản ' + rel.tag_name.replace(/^([a-z]+-)?v/, '') + ', phát hành ngày ' + new Date(rel.published_at).toLocaleDateString('vi-VN');
       OS.forEach(function (os) {
         var a = rel.assets.filter(function (x) { return x.name.endsWith(os.ext); })[0];
         if (!a) return;
