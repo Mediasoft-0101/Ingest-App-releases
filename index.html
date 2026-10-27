@@ -3,78 +3,221 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tải MediaSoft Ingest App</title>
+<title>Tải Mediasoft Ingest</title>
+<link rel="icon" href="assets/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap&subset=vietnamese" rel="stylesheet">
 <style>
-  :root { --brand: #A42C48; --bg: #F5F2F3; --card: #fff; --text: #1f1f1f; --muted: #6b6b6b; --rule: #EBE3E5; }
+  /* Màu và bo góc theo CMS-Admin (colors.ts + index.css): brand A42C48, nền F5F2F3, bo 6/8. */
+  :root {
+    --brand: #A42C48; --brand-press: #8A2139; --on-brand: #fff;
+    --ground: #F5F2F3; --surface: #fff; --ink: #1f1f1f; --soft: #595959; --code: #EDE7E9;
+    --gutter: clamp(16px, 4vw, 48px);
+  }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #1C1C1E; --card: #2C2C2E; --text: #f2f2f2; --muted: #a0a0a0; --rule: #3A3A3C; }
+    :root { --ground: #1C1C1E; --surface: #2C2C2E; --ink: #f2f2f2; --soft: #b3b3b3; --code: #3A3A3C; --brand: #C2405E; --brand-press: #A42C48; }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 640px; margin: 0 auto; padding: 40px 16px; }
-  h1 { font-size: 24px; margin: 0 0 4px; }
-  .muted { color: var(--muted); }
-  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; margin-top: 12px; display: flex; align-items: center; gap: 12px; }
-  .card.mine { border-color: var(--brand); }
-  .card div { flex: 1; min-width: 0; }
-  .card b { display: block; }
-  a.btn { background: var(--brand); color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 6px; white-space: nowrap; }
-  h2 { font-size: 16px; margin: 32px 0 8px; }
-  code { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; display: block; overflow-x: auto; font-size: 13px; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 17px/1.55 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--brand); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+
+  header.bar { display: flex; align-items: center; gap: 12px; padding-top: 24px; padding-bottom: 24px; font-weight: 600; }
+  header.bar img { width: 32px; height: 32px; border-radius: 6px; }
+  header.bar .station { margin-left: auto; color: var(--soft); font-weight: 400; }
+
+  .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 72px); align-items: center; padding-top: clamp(24px, 6vw, 88px); padding-bottom: clamp(64px, 10vw, 160px); }
+  h1 { font-size: clamp(44px, 6.4vw, 92px); line-height: .95; letter-spacing: -.035em; margin: 0; font-weight: 700; }
+  .for { font-size: clamp(22px, 2.2vw, 30px); font-weight: 600; letter-spacing: -.01em; margin: 16px 0 0; color: var(--brand); }
+  .lead { font-size: clamp(17px, 1.6vw, 22px); margin: 28px 0 0; max-width: 32em; }
+  .ver { color: var(--soft); margin: 12px 0 0; min-height: 1.55em; }
+  .ver.err { color: var(--ink); }
+  .actions { margin-top: 36px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .btn { display: inline-flex; align-items: baseline; gap: 10px; background: var(--brand); color: var(--on-brand); text-decoration: none; font-weight: 600; font-size: 17px; padding: 16px 28px; border-radius: 6px; transition: background-color .15s, transform .1s; }
+  .btn:hover { background: var(--brand-press); }
+  .btn:active { transform: translateY(1px); }
+  .btn small { font-weight: 400; font-size: 15px; opacity: .85; }
+  .other { color: var(--soft); font-size: 15px; }
+  .other a { font-weight: 600; }
+  .actions[hidden] { display: none; }
+  .shot { margin: 0; }
+  .shot img { display: block; width: 100%; height: auto; border-radius: 8px; background: var(--surface); }
+  .shot figcaption { color: var(--soft); font-size: 15px; margin-top: 12px; }
+
+  .install { background: var(--surface); padding-top: clamp(64px, 9vw, 128px); padding-bottom: clamp(64px, 9vw, 128px); }
+  h2 { font-size: clamp(22px, 2.2vw, 30px); line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+  .install .intro { margin: 16px 0 0; max-width: 40em; }
+  .os { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); margin-top: 56px; }
+  .os > div { min-width: 0; }
+  .os h3 { font-size: 22px; margin: 0 0 12px; }
+  .os ol { margin: 0; padding-left: 1.3em; }
+  .os li { margin: 0 0 10px; padding-left: 4px; }
+  .os.mine-mac > .mac, .os.mine-win > .win { order: -1; }
+  pre { background: var(--code); border-radius: 6px; padding: 12px 14px; white-space: pre-wrap; overflow-wrap: anywhere; margin: 10px 0 0; font-size: 14px; line-height: 1.45; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+  .update { padding-top: clamp(64px, 9vw, 128px); padding-bottom: clamp(64px, 9vw, 128px); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 72px); }
+  .update p { margin: 0 0 14px; }
+  .channels { list-style: none; margin: 0; padding: 0; }
+  .channels li { background: var(--surface); border-radius: 8px; padding: 16px 20px; margin: 0 0 8px; display: flex; justify-content: space-between; gap: 16px; }
+  .channels li.here { background: var(--brand); color: var(--on-brand); }
+  .channels li.here a { color: var(--on-brand); }
+  .channels span { color: inherit; opacity: .8; }
+
+  footer { background: var(--ink); color: var(--ground); padding-top: 56px; padding-bottom: 56px; }
+  footer .name { font-size: clamp(44px, 6.4vw, 92px); font-weight: 700; letter-spacing: -.035em; line-height: 1; margin: 0; }
+  footer p { margin: 16px 0 0; opacity: .8; font-size: 15px; }
+
+  @media (max-width: 900px) {
+    .hero, .update { grid-template-columns: 1fr; }
+    .os { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
+<header class="wrap bar">
+  <img src="assets/mark.png" alt="">
+  <span>Mediasoft Ingest</span>
+  <span class="station" id="station-top"></span>
+</header>
+
 <main>
-  <h1>MediaSoft Ingest App</h1>
-  <p class="muted" id="ver">Đang tải thông tin phiên bản…</p>
-  <div id="list"></div>
+  <section class="wrap hero" aria-labelledby="title">
+    <div>
+      <h1 id="title">Mediasoft Ingest</h1>
+      <p class="for" id="for">Bộ cài cho máy tính</p>
+      <p class="lead">Ứng dụng máy tính của Mediasoft để duyệt kho dữ liệu thô, tải tư liệu lên và nạp video cho bài Truyền hình.</p>
+      <p class="ver" id="ver">Đang lấy phiên bản mới nhất…</p>
+      <div class="actions" id="actions" hidden>
+        <a class="btn" id="primary" href="#"></a>
+        <span class="other" id="other"></span>
+      </div>
+    </div>
+    <figure class="shot">
+      <picture>
+        <source srcset="assets/app-dark.png" media="(prefers-color-scheme: dark)">
+        <img src="assets/app-light.png" width="2360" height="1240" alt="Màn Kho dữ liệu của Mediasoft Ingest: bộ lọc theo loại tệp, cây thư mục và lưới tệp video, hình ảnh, âm thanh">
+      </picture>
+      <figcaption>Màn Kho dữ liệu, dữ liệu minh hoạ.</figcaption>
+    </figure>
+  </section>
 
-  <h2>Trước khi cài</h2>
-  <p>Máy nào cũng cần cài <a href="https://www.videolan.org/vlc/">VLC</a> trước thì app mới phát được video.</p>
+  <section class="install" aria-labelledby="install-title">
+    <div class="wrap">
+      <h2 id="install-title">Cài đặt</h2>
+      <p class="intro">Máy nào cũng cần cài <a href="https://www.videolan.org/vlc/">VLC</a> trước, không có VLC thì app không phát được video.</p>
+      <div class="os" id="os">
+        <div class="win">
+          <h3>Windows 10 và 11</h3>
+          <ol>
+            <li>Mở tệp <code>.msi</code> vừa tải.</li>
+            <li>Nếu Windows báo "Windows protected your PC", bấm <b>More info</b> rồi <b>Run anyway</b>.</li>
+            <li>Cài cho riêng tài khoản đang dùng, không cần quyền quản trị. Bản mới cài đè lên bản cũ.</li>
+          </ol>
+        </div>
+        <div class="mac">
+          <h3>macOS 13 trở lên</h3>
+          <ol>
+            <li>Mở tệp <code>.dmg</code>, kéo Mediasoft Ingest vào Applications.</li>
+            <li>Lần mở đầu macOS báo "ứng dụng bị hỏng". Tệp không hỏng: bộ cài chưa được ký. Mở Terminal, chạy một lần:
+              <pre><code>xattr -dr com.apple.quarantine "/Applications/Mediasoft Ingest.app"</code></pre>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <h2>Windows</h2>
-  <p>Nếu Windows hiện "Windows protected your PC", bấm <b>More info</b> rồi chọn <b>Run anyway</b>. Bản mới tự thay thế bản đang cài.</p>
-
-  <h2>macOS</h2>
-  <p>Kéo app vào Applications. Lần mở đầu tiên macOS sẽ báo "ứng dụng bị hỏng". Tệp không hỏng, chỉ cần mở Terminal và chạy lệnh sau một lần:</p>
-  <code>xattr -dr com.apple.quarantine /Applications/MediaSoftMediaApp.app</code>
-
-  <h2>Linux</h2>
-  <code>sudo dpkg -i mediasoft-ingest_*.deb</code>
+  <section class="wrap update" aria-labelledby="update-title">
+    <div>
+      <h2 id="update-title">Mỗi đài một bộ cài</h2>
+    </div>
+    <div>
+      <p>Bộ cài đã gắn sẵn địa chỉ máy chủ của một đài, nên hãy tải đúng trang của đài mình. Từ bản 1.0.20, app tự báo khi đài có bản mới; trên Windows bấm Cập nhật là app tải và cài luôn.</p>
+      <ul class="channels" id="channels"></ul>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap">
+    <p class="name">Mediasoft Ingest</p>
+    <p>Cần hỗ trợ cài đặt, liên hệ bộ phận kỹ thuật của đài.</p>
+  </div>
+</footer>
+
 <script>
-  // Lấy bản mới nhất từ GitHub, chỉ hiện bộ cài (không hiện Source code GitHub tự gắn).
-  // Mỗi bộ cài nhúng địa chỉ của MỘT đài. Không có #: bản mặc định (latest). Có #<đài> (vd #khanhhoa): bản mới nhất có tag <đài>-v…;
-  // bản của đài không bao giờ được đánh latest nên không lọt vào trang mặc định.
-  var DAI = { khanhhoa: 'Khánh Hòa', dev: 'Môi trường dev' };
-  var dai = location.hash.replace('#', '').toLowerCase();
-  if (!DAI[dai]) dai = '';
-  var OS = [
-    { ext: '.msi', name: 'Windows 10/11', ua: /Windows/ },
-    { ext: '.dmg', name: 'macOS 13 trở lên', ua: /Mac/ },
-    { ext: '.deb', name: 'Ubuntu 22.04 / Debian 12', ua: /Linux/ }
-  ];
-  var ver = document.getElementById('ver'), list = document.getElementById('list');
+  // Mỗi bộ cài nhúng địa chỉ của MỘT đài. Không có #: bản mặc định (latest, Thái Nguyên). #<đài>: bản mới nhất có tag <đài>-v…
+  // Bản của đài không bao giờ là latest nên không lọt vào trang mặc định. Tên đài lạ thì BÁO, không lùi về bản mặc định:
+  // cài nhầm bộ cài của đài khác là app trỏ sang máy chủ khác.
+  var DAI = { '': 'Thái Nguyên', khanhhoa: 'Khánh Hòa', dev: 'Môi trường dev' };
   var API = 'https://api.github.com/repos/Mediasoft-0101/Ingest-App-releases/releases';
-  fetch(dai ? API + '?per_page=50' : API + '/latest')
-    .then(function (r) { if (!r.ok) throw r; return r.json(); })
-    .then(function (data) {
-      var rel = dai ? data.filter(function (x) { return x.tag_name.indexOf(dai + '-') === 0; })[0] : data;
-      if (!rel) throw new Error('chưa có bản cho đài');
-      if (dai) document.querySelector('h1').textContent = 'MediaSoft Ingest App · ' + DAI[dai];
-      ver.textContent = 'Phiên bản ' + rel.tag_name.replace(/^([a-z]+-)?v/, '') + ', phát hành ngày ' + new Date(rel.published_at).toLocaleDateString('vi-VN');
-      OS.forEach(function (os) {
-        var a = rel.assets.filter(function (x) { return x.name.endsWith(os.ext); })[0];
-        if (!a) return;
-        var card = document.createElement('div'), info = document.createElement('div'), t = document.createElement('b'), s = document.createElement('span'), btn = document.createElement('a');
-        card.className = 'card' + (os.ua.test(navigator.userAgent) && !/Android|iPhone|iPad/.test(navigator.userAgent) ? ' mine' : '');
-        t.textContent = os.name;
-        s.className = 'muted'; s.textContent = a.name + ' · ' + Math.round(a.size / 1048576) + ' MB';
-        btn.className = 'btn'; btn.href = a.browser_download_url; btn.textContent = 'Tải về';
-        info.append(t, s); card.append(info, btn); list.append(card);
-      });
-    })
-    .catch(function () { ver.textContent = 'Chưa lấy được danh sách bộ cài. Tải lại trang sau ít phút.'; });
+  var OS = { win: { ext: '.msi', name: 'Windows' }, mac: { ext: '.dmg', name: 'macOS' } };
+  var mine = /Mac/.test(navigator.userAgent) && !/iPhone|iPad/.test(navigator.userAgent) ? 'mac' : 'win';
+  var $ = function (id) { return document.getElementById(id); };
+  var cache = null;
+
+  function el(tag, text) { var e = document.createElement(tag); if (text) e.textContent = text; return e; }
+  function mb(a) { return Math.round(a.size / 1048576) + ' MB'; }
+
+  function channels(dai) {
+    var ul = $('channels'); ul.textContent = '';
+    Object.keys(DAI).forEach(function (k) {
+      var li = el('li'), a = el('a', DAI[k]);
+      a.href = k ? '#' + k : location.pathname;
+      li.append(a, el('span', k === dai ? 'trang này' : ''));
+      if (k === dai) li.className = 'here';
+      ul.append(li);
+    });
+  }
+
+  function fail(msg) {
+    $('ver').textContent = msg; $('ver').className = 'ver err'; $('actions').hidden = true;
+  }
+
+  function render() {
+    var dai = location.hash.replace('#', '').toLowerCase();
+    channels(dai);
+    $('os').className = 'os mine-' + mine;
+    $('ver').className = 'ver'; $('actions').hidden = true;
+    if (!(dai in DAI)) {
+      $('for').textContent = 'Bộ cài cho máy tính';
+      $('station-top').textContent = '';
+      return fail('Không có bộ cài cho “' + dai + '”. Chọn đúng đài của bạn ở mục bên dưới.');
+    }
+    $('for').textContent = 'Bộ cài cho ' + DAI[dai];
+    $('station-top').textContent = DAI[dai];
+    $('ver').textContent = 'Đang lấy phiên bản mới nhất…';
+    (cache || (cache = fetch(API + '?per_page=50').then(function (r) { if (!r.ok) throw r; return r.json(); })))
+      .then(function (data) {
+        var rel = data.filter(function (x) {
+          return !x.draft && !x.prerelease && (dai ? x.tag_name.indexOf(dai + '-v') === 0 : /^v\d/.test(x.tag_name));
+        })[0];
+        if (!rel) return fail('Chưa có bản phát hành cho ' + DAI[dai] + '. Quay lại sau.');
+        $('ver').textContent = 'Phiên bản ' + rel.tag_name.replace(/^([a-z]+-)?v/, '') + ', phát hành ngày ' +
+          new Date(rel.published_at).toLocaleDateString('vi-VN');
+        var pick = function (k) { return rel.assets.filter(function (a) { return a.name.endsWith(OS[k].ext); })[0]; };
+        var main = pick(mine) ? mine : (mine === 'win' ? 'mac' : 'win'), alt = main === 'win' ? 'mac' : 'win';
+        var a = pick(main), b = pick(alt);
+        if (!a) return fail('Bản này chưa có bộ cài. Quay lại sau.');
+        var btn = $('primary'); btn.textContent = 'Tải cho ' + OS[main].name + ' ';
+        btn.append(el('small', mb(a))); btn.href = a.browser_download_url;
+        var other = $('other'); other.textContent = '';
+        if (b) {
+          var link = el('a', OS[alt].name); link.href = b.browser_download_url;
+          other.append('Dùng máy khác? Tải bản ', link, ' (' + mb(b) + ')');
+        }
+        $('actions').hidden = false;
+      })
+      .catch(function () { cache = null; fail('Chưa lấy được danh sách bộ cài. Tải lại trang sau ít phút.'); });
+  }
+
+  // Đổi # trên thanh địa chỉ không tải lại trang: phải vẽ lại, không thì vẫn hiện bộ cài của đài trước.
+  window.addEventListener('hashchange', render);
+  render();
 </script>
 </body>
 </html>
