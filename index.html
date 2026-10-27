@@ -46,7 +46,7 @@
   // Lấy bản mới nhất từ GitHub, chỉ hiện bộ cài (không hiện Source code GitHub tự gắn).
   // Mỗi bộ cài nhúng địa chỉ của MỘT đài. Không có #: bản mặc định (latest). Có #<đài> (vd #khanhhoa): bản mới nhất có tag <đài>-v…;
   // bản của đài không bao giờ được đánh latest nên không lọt vào trang mặc định.
-  var DAI = { khanhhoa: 'Khánh Hòa' };
+  var DAI = { khanhhoa: 'Khánh Hòa', dev: 'Môi trường dev' };
   var dai = location.hash.replace('#', '').toLowerCase();
   if (!DAI[dai]) dai = '';
   var OS = [
